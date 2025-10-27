@@ -157,6 +157,59 @@
             font-size: 0.85em;
             margin-top: 20px;
         }
+
+        .chart-area {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            background: rgba(0, 20, 20, 0.5);
+            border: 1px solid #222;
+            border-radius: 4px;
+        }
+
+        .zone-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        .zone-line.support {
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            border-bottom: 1px solid #00ff88;
+        }
+
+        .zone-line.resistance {
+            background: linear-gradient(90deg, transparent, #ff4444, transparent);
+            border-top: 1px solid #ff4444;
+        }
+
+        .zone-label {
+            position: absolute;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid currentColor;
+        }
+
+        .support .zone-label {
+            color: #00ff88;
+        }
+
+        .resistance .zone-label {
+            color: #ff4444;
+        }
+
+        .price-chart {
+            stroke: #00ff88;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -172,7 +225,7 @@
                 <div class="price-label">SOL Price</div>
                 <div class="price-value" id="currentPrice">$0.00</div>
             </div>
-            <div id="chart-content"></div>
+            <div class="chart-area" id="chart-area"></div>
         </div>
 
         <div class="zone-list" id="zones"></div>
@@ -232,6 +285,84 @@
                 `<span style="color: #ffaa00;">⚠️ Demo Mode - Configure API endpoint to view live data</span>`;
         }
 
+        function renderChart(zones) {
+            if (!zones || zones.length === 0) return;
+            
+            const chartArea = document.getElementById('chart-area');
+            const currentPrice = parseFloat(document.getElementById('currentPrice').textContent.replace('$', ''));
+            
+            // Get price range
+            const allPrices = zones.map(z => z.price).concat(currentPrice);
+            const minPrice = Math.min(...allPrices) * 0.98;
+            const maxPrice = Math.max(...allPrices) * 1.02;
+            const priceRange = maxPrice - minPrice;
+            
+            // Create SVG
+            chartArea.innerHTML = '';
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 800 400');
+            svg.setAttribute('preserveAspectRatio', 'none');
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            
+            // Draw zone lines
+            zones.forEach(zone => {
+                const y = ((maxPrice - zone.price) / priceRange) * 400;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', '0');
+                line.setAttribute('y1', y.toString());
+                line.setAttribute('x2', '800');
+                line.setAttribute('y2', y.toString());
+                line.setAttribute('stroke', zone.is_support ? '#00ff88' : '#ff4444');
+                line.setAttribute('stroke-width', '2');
+                line.setAttribute('opacity', '0.6');
+                line.style.filter = 'drop-shadow(0 0 3px currentColor)';
+                svg.appendChild(line);
+                
+                // Add label
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '10');
+                text.setAttribute('y', (y + 4).toString());
+                text.setAttribute('fill', zone.is_support ? '#00ff88' : '#ff4444');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('font-weight', 'bold');
+                text.textContent = `$${zone.price.toFixed(2)} - ${zone.label}`;
+                svg.appendChild(text);
+            });
+            
+            // Draw current price line
+            const currentY = ((maxPrice - currentPrice) / priceRange) * 400;
+            const currentLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            currentLine.setAttribute('x1', '0');
+            currentLine.setAttribute('y1', currentY.toString());
+            currentLine.setAttribute('x2', '800');
+            currentLine.setAttribute('y2', currentY.toString());
+            currentLine.setAttribute('stroke', '#fff');
+            currentLine.setAttribute('stroke-width', '3');
+            currentLine.setAttribute('opacity', '0.9');
+            currentLine.setAttribute('stroke-dasharray', '5,5');
+            svg.appendChild(currentLine);
+            
+            // Add price range labels
+            const minLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            minLabel.setAttribute('x', '10');
+            minLabel.setAttribute('y', '390');
+            minLabel.setAttribute('fill', '#888');
+            minLabel.setAttribute('font-size', '11');
+            minLabel.textContent = `$${minPrice.toFixed(2)}`;
+            svg.appendChild(minLabel);
+            
+            const maxLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            maxLabel.setAttribute('x', '10');
+            maxLabel.setAttribute('y', '15');
+            maxLabel.setAttribute('fill', '#888');
+            maxLabel.setAttribute('font-size', '11');
+            maxLabel.textContent = `$${maxPrice.toFixed(2)}`;
+            svg.appendChild(maxLabel);
+            
+            chartArea.appendChild(svg);
+        }
+        
         function displayZones(zones) {
             if (!zones || zones.length === 0) {
                 document.getElementById('zones').innerHTML = `
@@ -243,7 +374,7 @@
             // Sort zones by strength (highest first)
             const sortedZones = zones.sort((a, b) => b.strength - a.strength);
 
-            // Display top zones
+            // Display top zones in cards
             const html = sortedZones.slice(0, 9).map(zone => `
                 <div class="zone-card">
                     <div class="zone-header">
@@ -259,6 +390,9 @@
             `).join('');
 
             document.getElementById('zones').innerHTML = html;
+            
+            // Render visual chart
+            renderChart(sortedZones);
         }
 
         // Initial fetch
