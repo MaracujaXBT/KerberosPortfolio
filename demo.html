@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGREGORE Live Preview | Kerberos Research</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0e0f;
+            color: #00ff88;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .header p {
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .status {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .status.live {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chart-container {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 500px;
+            position: relative;
+        }
+
+        .price-display {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid #00ff88;
+        }
+
+        .price-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .price-label {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .zone-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .zone-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .zone-card:hover {
+            border-color: #00ff88;
+            transform: translateY(-2px);
+        }
+
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .zone-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .zone-strength {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+        }
+
+        .zone-info {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+
+        .error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: #ff4444;
+        }
+
+        .refresh-info {
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>EGREGORE LIVE ZONES</h1>
+            <p>Real-time pattern detection on SOL</p>
+            <div class="status live" id="status">● LIVE</div>
+        </div>
+
+        <div class="chart-container" id="chart">
+            <div class="price-display">
+                <div class="price-label">SOL Price</div>
+                <div class="price-value" id="currentPrice">$0.00</div>
+            </div>
+            <div id="chart-content"></div>
+        </div>
+
+        <div class="zone-list" id="zones"></div>
+        <div class="refresh-info" id="refreshInfo">Auto-refreshing every 10 seconds</div>
+    </div>
+
+    <script>
+        // Update this URL to point to your deployed EGREGORE server
+        const API_BASE = 'https://your-server-url.onrender.com/api';  
+        
+        async function fetchZones() {
+            try {
+                // Try to fetch from live server
+                const response = await fetch(`${API_BASE}/zones?symbol=SOLUSDT&timeframe=4h`, {
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (!response.ok) throw new Error('Server not accessible');
+                
+                const data = await response.json();
+                
+                // Also fetch current price
+                const ohlcvResponse = await fetch(`${API_BASE}/ohlcv?symbol=SOLUSDT&timeframe=4h&limit=1`);
+                const ohlcvData = await ohlcvResponse.json();
+                
+                if (ohlcvData.data && ohlcvData.data.length > 0) {
+                    const currentPrice = ohlcvData.data[ohlcvData.data.length - 1].close;
+                    document.getElementById('currentPrice').textContent = `$${currentPrice.toFixed(2)}`;
+                }
+
+                displayZones(data.zones);
+                
+            } catch (error) {
+                console.error('Live API not available, showing demo data:', error);
+                // Show demo/mock data
+                showDemoData();
+            }
+        }
+
+        function showDemoData() {
+            // Mock zones based on typical EGREGORE patterns
+            const mockZones = [
+                { price: 202.50, kind: 'angel', strength: 0.95, is_support: true, label: 'PERFECT 2×5' },
+                { price: 199.11, kind: 'palindrome', strength: 0.85, is_support: false, label: 'PALINDROME' },
+                { price: 197.89, kind: 'ascending', strength: 0.75, is_support: true, label: 'ASCENDING 7-8-9' },
+                { price: 200.00, kind: 'round', strength: 0.90, is_support: true, label: 'ROUND NUMBER' },
+                { price: 195.55, kind: 'angel', strength: 0.80, is_support: false, label: 'STRONG 5×4' },
+                { price: 204.44, kind: 'descending', strength: 0.70, is_support: false, label: 'DESCENDING 4-4-4' },
+            ];
+            
+            document.getElementById('currentPrice').textContent = '$202.13';
+            document.getElementById('status').textContent = '● DEMO MODE';
+            document.getElementById('status').className = 'status';
+            displayZones(mockZones);
+            
+            document.getElementById('refreshInfo').innerHTML = 
+                `<span style="color: #ffaa00;">⚠️ Demo Mode - Configure API endpoint to view live data</span>`;
+        }
+
+        function displayZones(zones) {
+            if (!zones || zones.length === 0) {
+                document.getElementById('zones').innerHTML = `
+                    <div class="loading">No zones detected at this time</div>
+                `;
+                return;
+            }
+
+            // Sort zones by strength (highest first)
+            const sortedZones = zones.sort((a, b) => b.strength - a.strength);
+
+            // Display top zones
+            const html = sortedZones.slice(0, 9).map(zone => `
+                <div class="zone-card">
+                    <div class="zone-header">
+                        <div class="zone-price">$${zone.price.toFixed(2)}</div>
+                        <div class="zone-strength">${(zone.strength * 100).toFixed(0)}%</div>
+                    </div>
+                    <div class="zone-info">
+                        <strong>Type:</strong> ${zone.kind.toUpperCase()}<br>
+                        <strong>Role:</strong> ${zone.is_support ? 'Support' : 'Resistance'}<br>
+                        <strong>Label:</strong> ${zone.label}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('zones').innerHTML = html;
+        }
+
+        // Initial fetch
+        fetchZones();
+
+        // Auto-refresh every 10 seconds
+        setInterval(fetchZones, 10000);
+
+        // Update last refresh time
+        function updateRefreshTime() {
+            const now = new Date();
+            document.getElementById('refreshInfo').textContent = 
+                `Auto-refreshing every 10 seconds | Last updated: ${now.toLocaleTimeString()}`;
+        }
+
+        setInterval(updateRefreshTime, 1000);
+    </script>
+</body>
+</html>
+
