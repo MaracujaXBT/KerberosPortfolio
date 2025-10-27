@@ -373,6 +373,70 @@ body {
     opacity: 0.7;
 }
 
+/* Demo Section */
+.demo {
+    padding: 4rem 0;
+    background: var(--bg-darker);
+}
+
+.demo-box {
+    width: 100%;
+    background: var(--bg-darker);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+/* MacBook Mockup */
+.macbook-mockup {
+    perspective: 1000px;
+}
+
+.macbook-top {
+    background: linear-gradient(180deg, #272727 0%, #1a1a1a 100%);
+    border-radius: 20px 20px 0 0;
+    padding: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.macbook-screen {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 3px;
+    overflow: hidden;
+}
+
+.macbook-screen-inner {
+    background: #000;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.macbook-notch {
+    width: 150px;
+    height: 24px;
+    background: linear-gradient(180deg, #272727 0%, #1a1a1a 100%);
+    margin: 0 auto;
+    border-radius: 0 0 12px 12px;
+    position: relative;
+    top: -3px;
+}
+
+.macbook-base {
+    background: linear-gradient(180deg, #272727 0%, #1a1a1a 100%);
+    height: 12px;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.macbook-trackpad {
+    width: 60px;
+    height: 6px;
+    background: #0a0a0a;
+    border-radius: 3px;
+    margin: 3px auto 0;
+}
+
 /* Methodology */
 .methodology {
     padding: 6rem 0;
