@@ -1,0 +1,560 @@
+/* EGREGORE Portfolio Styles - Dark Theme Professional */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0a0e1a;
+    --bg-darker: #060a14;
+    --text-primary: #ffffff;
+    --text-secondary: #8892b0;
+    --accent-green: #00ffaa;
+    --accent-blue: #00d9ff;
+    --accent-purple: #a855f7;
+    --border-color: #1a1f2e;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-video iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 177.77777778vh;
+    height: 56.25vw;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0.15;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--accent-green) 0%, transparent 70%);
+    opacity: 0.05;
+    animation: pulse 20s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.05; }
+    50% { transform: scale(1.1); opacity: 0.1; }
+}
+
+.hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.hero h1 {
+    font-size: 8rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glow {
+    text-shadow: 0 0 40px rgba(0, 255, 170, 0.3);
+}
+
+.tagline {
+    font-size: 2.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.hero-lore {
+    margin-top: 3rem;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: rgba(0, 255, 170, 0.05);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lore-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--accent-green);
+    line-height: 1.8;
+}
+
+/* Navigation */
+.nav {
+    background: var(--bg-darker);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--accent-green);
+}
+
+/* Definitions Section */
+.definitions {
+    padding: 6rem 0;
+    background: var(--bg-dark);
+}
+
+.definition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+}
+
+.definition-card {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    padding: 3rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.definition-card h2 {
+    font-size: 3rem;
+    color: var(--accent-purple);
+    margin-bottom: 0.5rem;
+}
+
+.definition-type {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.definition-text {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.definition-philosophy {
+    color: var(--accent-green);
+    font-style: italic;
+    font-size: 1.1rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+/* Products Section */
+.products {
+    padding: 6rem 0;
+    background: var(--bg-darker);
+}
+
+.products h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 4rem;
+    color: var(--text-primary);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+}
+
+.product-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 3rem;
+    transition: transform 0.3s, border-color 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-green);
+}
+
+.product-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+.product-card h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-green);
+}
+
+.product-tag {
+    color: var(--accent-blue);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.product-card p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+}
+
+.feature-list {
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+.feature-list li {
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.btn {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--accent-green);
+    color: var(--accent-green);
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background: var(--accent-green);
+    color: var(--bg-dark);
+}
+
+/* Performance Section */
+.performance {
+    padding: 6rem 0;
+    background: var(--bg-dark);
+}
+
+.performance h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+}
+
+.time-period {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 3rem;
+}
+
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.performance-grid.secondary {
+    margin-top: 2rem;
+}
+
+.performance-grid.centered {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.metric {
+    text-align: center;
+    background: var(--bg-darker);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.metric-value {
+    font-size: 3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+}
+
+.metric-detail {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.disclaimer {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+/* Methodology */
+.methodology {
+    padding: 6rem 0;
+    background: var(--bg-darker);
+}
+
+.methodology h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 4rem;
+}
+
+.method-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.method-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.method-card h3 {
+    color: var(--accent-green);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.method-card p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+/* Tech Stack */
+.tech {
+    padding: 4rem 0;
+    background: var(--bg-dark);
+}
+
+.tech h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tech-badge {
+    background: var(--bg-darker);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Philosophy Section */
+.philosophy {
+    padding: 6rem 0;
+    background: var(--bg-dark);
+}
+
+.philosophy h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 3rem;
+}
+
+.philosophy-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.philo-quote {
+    text-align: center;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--accent-green);
+    margin-bottom: 3rem;
+    border-left: 3px solid var(--accent-green);
+    padding-left: 2rem;
+}
+
+.philo-points {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.philo-point {
+    background: var(--bg-darker);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.philo-point h4 {
+    color: var(--accent-green);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.philo-point p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+/* Contact */
+.contact {
+    padding: 6rem 0;
+    text-align: center;
+    background: var(--bg-darker);
+}
+
+.contact h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.contact p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.contact-info {
+    margin-bottom: 2rem;
+}
+
+.contact-item {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+.contact-item a {
+    color: var(--accent-green);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contact-item a:hover {
+    color: var(--accent-blue);
+}
+
+.email {
+    color: var(--accent-green);
+    font-weight: 600;
+}
+
+/* Footer */
+footer {
+    background: var(--bg-darker);
+    border-top: 1px solid var(--border-color);
+    padding: 2rem 0;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 4rem;
+    }
+    
+    .tagline {
+        font-size: 1.5rem;
+    }
+    
+    .nav-links {
+        gap: 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
