@@ -345,13 +345,16 @@ body {
 }
 
 .metric-value {
-    font-size: 3rem;
+    font-size: 2.2rem;
     font-weight: 900;
     background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 0.5rem;
+    line-height: 1.1;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .metric-label {
@@ -621,4 +624,6 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
 
